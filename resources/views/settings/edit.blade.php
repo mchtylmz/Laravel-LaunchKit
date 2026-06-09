@@ -1,6 +1,8 @@
 <x-layouts.app title="Settings">
     <section class="card max-w-3xl">
-        <h2 class="text-lg font-semibold">Application settings</h2>
+        <p class="section-title">Configuration</p>
+        <h2 class="mt-1 text-2xl font-black">Application settings</h2>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tune product identity, registration and upload limits from one place.</p>
         <form method="POST" action="{{ route('settings.update') }}" class="mt-5 grid gap-4">
             @csrf
             @method('PUT')

@@ -1,7 +1,13 @@
 <x-layouts.app title="Register">
-    <div class="grid min-h-screen place-items-center bg-slate-50 px-4 dark:bg-slate-950">
+    <div class="soft-grid grid min-h-screen place-items-center px-4 py-10 dark:bg-slate-950">
         <div class="w-full max-w-md card">
-            <h1 class="text-2xl font-bold">Register</h1>
+            <div class="mb-6 flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-sm font-bold text-white dark:bg-white dark:text-slate-950">LL</span>
+                <div>
+                    <h1 class="text-2xl font-black">Register</h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Create a clean starter workspace.</p>
+                </div>
+            </div>
             <form method="POST" action="{{ route('register.store') }}" class="mt-6 space-y-4">
                 @csrf
                 <input class="w-full" name="name" placeholder="Name" value="{{ old('name') }}" required>

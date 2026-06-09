@@ -175,7 +175,7 @@ Format the codebase:
 
 ## Screenshots
 
-These are generated placeholder screenshots. Replace with real screenshots before publishing a production release.
+These screenshots show the current Laravel LaunchKit interface.
 
 ![Landing](docs/screenshots/landing.png)
 ![Dashboard](docs/screenshots/dashboard.png)

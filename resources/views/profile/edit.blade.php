@@ -1,7 +1,12 @@
 <x-layouts.app title="Profile">
+    <div class="mb-6">
+        <p class="section-title">Account center</p>
+        <h2 class="mt-1 text-2xl font-black">Profile information</h2>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Keep account details, avatar and password up to date.</p>
+    </div>
     <div class="grid gap-6 xl:grid-cols-2">
         <section class="card">
-            <h2 class="text-lg font-semibold">Profile information</h2>
+            <h3 class="text-lg font-bold">Profile information</h3>
             <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-5 space-y-4">
                 @csrf
                 @method('PUT')
@@ -15,7 +20,7 @@
             </form>
         </section>
         <section class="card">
-            <h2 class="text-lg font-semibold">Change password</h2>
+            <h3 class="text-lg font-bold">Change password</h3>
             <form method="POST" action="{{ route('profile.password') }}" class="mt-5 space-y-4">
                 @csrf
                 @method('PUT')

@@ -175,7 +175,7 @@ Kod formatını düzeltin:
 
 ## Ekran Görüntüleri
 
-Bunlar üretilmiş placeholder ekran görüntüleridir. Production yayınından önce gerçek ekran görüntüleriyle değiştirin.
+Bu ekran görüntüleri Laravel LaunchKit arayüzünün güncel halini gösterir.
 
 ![Landing](docs/screenshots/landing.png)
 ![Dashboard](docs/screenshots/dashboard.png)
