@@ -5,6 +5,7 @@
 !.env.example
 .phpactor.json
 .phpunit.result.cache
+PLAN.md
 /.codex
 /.cursor/
 /.idea
