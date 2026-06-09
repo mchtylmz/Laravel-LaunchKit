@@ -29,7 +29,7 @@ Laravel projelerinin çoğunda benzer temel ihtiyaçlar bulunur: giriş/kayıt, 
 ## Kullanılan Teknolojiler
 
 - Laravel 13
-- PHP 8.4 uyumlu yapı
+- PHP 8.4+
 - Varsayılan SQLite veritabanı
 - Vite
 - TailwindCSS
@@ -75,7 +75,7 @@ Servisleri oluşturup başlatın:
 docker compose up -d --build
 ```
 
-PHP bağımlılıklarını kurun:
+Yeni klonlanan projede PHP bağımlılıklarını app container içinde kurun:
 
 ```bash
 docker compose exec app composer install

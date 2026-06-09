@@ -29,7 +29,7 @@ Most Laravel projects need the same foundation: authentication, profile manageme
 ## Tech Stack
 
 - Laravel 13
-- PHP 8.4 compatible
+- PHP 8.4+
 - SQLite by default
 - Vite
 - TailwindCSS
@@ -75,7 +75,7 @@ Build and start the services:
 docker compose up -d --build
 ```
 
-Install PHP dependencies:
+If this is a fresh clone, install PHP dependencies inside the app container:
 
 ```bash
 docker compose exec app composer install

@@ -81,7 +81,7 @@ Resmi Laravel dokümantasyonuna göre Laravel 13.x güncel ana sürümdür ve mi
 Kullanılacak temel stack:
 
 - Laravel 13.x
-- PHP 8.4 uyumlu yapı
+- PHP 8.4+ uyumlu yapı
 - SQLite varsayılan geliştirme veritabanı
 - Vite
 - TailwindCSS
