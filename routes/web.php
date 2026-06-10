@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('/file-manager', [FileManagerController::class, 'index'])->name('file-manager.index');
     Route::post('/file-manager', [FileManagerController::class, 'store'])->name('file-manager.store');
+    Route::get('/file-manager/{managedFile}/preview', [FileManagerController::class, 'show'])->name('file-manager.show');
     Route::get('/file-manager/{managedFile}/download', [FileManagerController::class, 'download'])->name('file-manager.download');
     Route::delete('/file-manager/{managedFile}', [FileManagerController::class, 'destroy'])->name('file-manager.destroy');
 });

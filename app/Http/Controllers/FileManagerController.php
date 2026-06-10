@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileManagerController extends Controller
@@ -103,6 +104,17 @@ class FileManagerController extends Controller
         ]);
 
         return back()->with('status', 'Dosya yüklendi.');
+    }
+
+    public function show(ManagedFile $managedFile): View|Response
+    {
+        abort_unless(auth()->user()?->can('manage files'), 403);
+
+        $fileUrl = Storage::disk($managedFile->disk)->url($managedFile->path);
+        $isImage = str_starts_with($managedFile->mime_type ?? '', 'image/');
+        $isPdf = $managedFile->mime_type === 'application/pdf';
+
+        return view('file-manager.show', compact('managedFile', 'fileUrl', 'isImage', 'isPdf'));
     }
 
     public function download(ManagedFile $managedFile): StreamedResponse

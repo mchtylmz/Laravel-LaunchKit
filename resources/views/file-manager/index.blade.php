@@ -22,6 +22,7 @@
                         </div>
                     </div>
                     <div class="flex gap-2">
+                        <a class="btn-secondary" href="{{ route('file-manager.show', $file) }}">Preview</a>
                         <a class="btn-secondary" href="{{ route('file-manager.download', $file) }}">Download</a>
                         <form method="POST" action="{{ route('file-manager.destroy', $file) }}">
                             @csrf
