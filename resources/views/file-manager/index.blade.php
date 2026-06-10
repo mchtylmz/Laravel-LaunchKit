@@ -3,9 +3,10 @@
         <p class="section-title">Storage</p>
         <h2 class="mt-1 text-2xl font-black">Upload file</h2>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Keep simple project assets and documents inside the starter kit.</p>
+        <p class="mt-1 text-xs text-slate-400 dark:text-slate-500">Allowed: {{ $allowedExtensions }} (max {{ $maxUploadSize }} KB)</p>
         <form method="POST" action="{{ route('file-manager.store') }}" enctype="multipart/form-data" class="mt-4 flex flex-col gap-3 sm:flex-row">
             @csrf
-            <input class="flex-1" name="file" type="file" required>
+            <input class="flex-1" name="file" type="file" accept=".{{ str_replace(',', ',.', $allowedExtensions) }}" required>
             <button class="btn-primary" type="submit">Upload</button>
         </form>
     </section>

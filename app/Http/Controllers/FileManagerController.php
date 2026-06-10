@@ -57,6 +57,8 @@ class FileManagerController extends Controller
                 });
             });
 
+        $allowedMimes = config('file-manager.allowed_mimes', []);
+
         return view('file-manager.index', [
             'files' => $query->latest()->paginate(12)->withQueryString(),
             'filters' => $filters,
@@ -69,6 +71,7 @@ class FileManagerController extends Controller
                 'total_size' => ManagedFile::query()->sum('size'),
             ],
             'maxUploadSize' => max(1, LaunchKitSettings::integer('max_upload_size', 10240)),
+            'allowedExtensions' => config('file-manager.allowed_extensions', ''),
         ]);
     }
 
@@ -78,8 +81,10 @@ class FileManagerController extends Controller
 
         $maxUploadSize = max(1, LaunchKitSettings::integer('max_upload_size', 10240));
 
+        $allowedMimes = config('file-manager.allowed_mimes', []);
+
         $data = $request->validate([
-            'file' => ['required', 'file', 'max:'.$maxUploadSize],
+            'file' => ['required', 'file', 'max:'.$maxUploadSize, 'mimes:'.config('file-manager.allowed_extensions', '')],
         ]);
 
         $uploaded = $data['file'];
