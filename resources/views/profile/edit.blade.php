@@ -53,4 +53,20 @@
             </form>
         </section>
     </div>
+
+    <section class="card mt-6 border-red-200 dark:border-red-900">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <p class="section-title text-red-600 dark:text-red-400">Danger zone</p>
+                <h3 class="mt-1 text-lg font-bold">Delete account</h3>
+                <p class="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400">Permanently remove this account and all associated data. This action cannot be undone.</p>
+            </div>
+        </div>
+        <form method="POST" action="{{ route('profile.destroy') }}" class="mt-5 flex flex-col gap-3 sm:flex-row" onsubmit="return confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')">
+            @csrf
+            @method('DELETE')
+            <input class="flex-1" name="current_password" type="password" placeholder="Current password to confirm" required>
+            <button class="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-50 dark:border-red-800 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950" type="submit">Delete account</button>
+        </form>
+    </section>
 </x-layouts.app>

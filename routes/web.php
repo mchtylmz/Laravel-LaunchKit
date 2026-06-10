@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::put('/profile/two-factor/enable', [ProfileController::class, 'enableTwoFactor'])->name('profile.two-factor.enable');
     Route::put('/profile/two-factor/disable', [ProfileController::class, 'disableTwoFactor'])->name('profile.two-factor.disable');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/sessions', [SessionController::class, 'index'])->name('sessions.index');
     Route::delete('/sessions/other', [SessionController::class, 'destroyOther'])->name('sessions.destroy-other');

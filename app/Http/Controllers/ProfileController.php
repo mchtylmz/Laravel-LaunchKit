@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
@@ -107,5 +108,25 @@ class ProfileController extends Controller
         ]);
 
         return back()->with('status', 'İki aşamalı doğrulama kapatıldı.');
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        activity()->causedBy($user)->log('Hesap silindi.');
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $user->appNotifications()->delete();
+        $user->delete();
+
+        return redirect()->route('landing')->with('status', 'Hesabınız başarıyla silindi.');
     }
 }
