@@ -7,6 +7,7 @@ use App\Http\Controllers\FileManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::put('/profile/two-factor/enable', [ProfileController::class, 'enableTwoFactor'])->name('profile.two-factor.enable');
     Route::put('/profile/two-factor/disable', [ProfileController::class, 'disableTwoFactor'])->name('profile.two-factor.disable');
+
+    Route::get('/sessions', [SessionController::class, 'index'])->name('sessions.index');
+    Route::delete('/sessions/other', [SessionController::class, 'destroyOther'])->name('sessions.destroy-other');
+    Route::delete('/sessions/{id}', [SessionController::class, 'destroy'])->name('sessions.destroy');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
