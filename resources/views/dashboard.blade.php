@@ -25,6 +25,31 @@
         @endforeach
     </div>
 
+    <section class="mt-6 grid gap-5 xl:grid-cols-3">
+        @foreach ([['Activity trend', $charts['activities'], 'Tracked events over the last 7 days'], ['User growth', $charts['users'], 'New users over the last 7 days'], ['File uploads', $charts['files'], 'Uploaded files over the last 7 days']] as [$title, $chart, $description])
+            @php $max = max(1, $chart->max('count')); @endphp
+            <div class="card">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="section-title">{{ $description }}</p>
+                        <h3 class="mt-1 text-lg font-black">{{ $title }}</h3>
+                    </div>
+                    <span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500 dark:bg-slate-950">{{ $chart->sum('count') }}</span>
+                </div>
+                <div class="mt-5 flex h-32 items-end gap-2">
+                    @foreach ($chart as $point)
+                        <div class="flex flex-1 flex-col items-center gap-2">
+                            <div class="flex h-24 w-full items-end rounded-lg bg-slate-100 p-1 dark:bg-slate-950">
+                                <div class="w-full rounded-md bg-indigo-600 dark:bg-emerald-400" style="height: {{ max(8, ($point['count'] / $max) * 100) }}%"></div>
+                            </div>
+                            <span class="text-[11px] font-semibold text-slate-400">{{ $point['label'] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    </section>
+
     <div class="mt-6 grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
         <section class="card">
             <div class="flex items-center justify-between">

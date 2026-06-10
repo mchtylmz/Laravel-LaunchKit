@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             DemoUserSeeder::class,
             SettingSeeder::class,
+            NotificationSeeder::class,
             ActivityLogSeeder::class,
         ]);
     }

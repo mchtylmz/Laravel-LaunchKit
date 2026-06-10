@@ -30,5 +30,27 @@
                 <button class="btn-primary" type="submit">Update password</button>
             </form>
         </section>
+        <section class="card xl:col-span-2">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <p class="section-title">Security</p>
+                    <h3 class="mt-1 text-lg font-bold">Two-factor authentication</h3>
+                    <p class="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
+                        {{ auth()->user()->two_factor_enabled ? '2FA is active. Login requires an email verification code.' : 'Protect this account by requiring an email verification code after password login.' }}
+                    </p>
+                </div>
+                <span class="w-fit rounded-lg {{ auth()->user()->two_factor_enabled ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-950' }} px-3 py-1 text-xs font-bold">
+                    {{ auth()->user()->two_factor_enabled ? 'Enabled' : 'Disabled' }}
+                </span>
+            </div>
+            <form method="POST" action="{{ auth()->user()->two_factor_enabled ? route('profile.two-factor.disable') : route('profile.two-factor.enable') }}" class="mt-5 flex flex-col gap-3 sm:flex-row">
+                @csrf
+                @method('PUT')
+                <input class="flex-1" name="current_password" type="password" placeholder="Current password" required>
+                <button class="{{ auth()->user()->two_factor_enabled ? 'btn-secondary' : 'btn-primary' }}" type="submit">
+                    {{ auth()->user()->two_factor_enabled ? 'Disable 2FA' : 'Enable 2FA' }}
+                </button>
+            </form>
+        </section>
     </div>
 </x-layouts.app>

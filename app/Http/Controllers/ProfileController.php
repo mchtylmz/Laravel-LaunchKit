@@ -36,6 +36,12 @@ class ProfileController extends Controller
         unset($data['avatar']);
         $user->update($data);
         activity()->causedBy($user)->performedOn($user)->log('Profil güncellendi.');
+        $user->appNotifications()->create([
+            'title' => 'Profil güncellendi',
+            'message' => 'Hesap profil bilgileriniz başarıyla kaydedildi.',
+            'type' => 'success',
+            'url' => route('profile.edit'),
+        ]);
 
         return back()->with('status', 'Profil bilgileri güncellendi.');
     }
@@ -52,7 +58,54 @@ class ProfileController extends Controller
         ]);
 
         activity()->causedBy($request->user())->log('Şifre değiştirildi.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Şifre değiştirildi',
+            'message' => 'Hesap şifreniz başarıyla güncellendi.',
+            'type' => 'security',
+            'url' => route('profile.edit'),
+        ]);
 
         return back()->with('status', 'Şifre güncellendi.');
+    }
+
+    public function enableTwoFactor(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+        ]);
+
+        $request->user()->update(['two_factor_enabled' => true]);
+        activity()->causedBy($request->user())->log('İki aşamalı doğrulama açıldı.');
+        $request->user()->appNotifications()->create([
+            'title' => '2FA açıldı',
+            'message' => 'İki aşamalı doğrulama hesabınız için aktif edildi.',
+            'type' => 'security',
+            'url' => route('profile.edit'),
+        ]);
+
+        return back()->with('status', 'İki aşamalı doğrulama açıldı.');
+    }
+
+    public function disableTwoFactor(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+        ]);
+
+        $request->user()->forceFill([
+            'two_factor_enabled' => false,
+            'two_factor_code_hash' => null,
+            'two_factor_expires_at' => null,
+        ])->save();
+
+        activity()->causedBy($request->user())->log('İki aşamalı doğrulama kapatıldı.');
+        $request->user()->appNotifications()->create([
+            'title' => '2FA kapatıldı',
+            'message' => 'İki aşamalı doğrulama hesabınız için devre dışı bırakıldı.',
+            'type' => 'security',
+            'url' => route('profile.edit'),
+        ]);
+
+        return back()->with('status', 'İki aşamalı doğrulama kapatıldı.');
     }
 }

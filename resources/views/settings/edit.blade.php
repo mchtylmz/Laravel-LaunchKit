@@ -21,4 +21,24 @@
             <button class="btn-primary w-fit" type="submit">Save settings</button>
         </form>
     </section>
+
+    <section class="card mt-6 max-w-3xl">
+        <p class="section-title">Audit history</p>
+        <h2 class="mt-1 text-xl font-black">Settings audit history</h2>
+        <div class="mt-4 space-y-3">
+            @forelse ($audits as $audit)
+                <div class="rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm dark:border-white/10 dark:bg-slate-950">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="font-semibold">{{ $audit->key }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ $audit->old_value ?? 'empty' }} → {{ $audit->new_value ?? 'empty' }}</p>
+                        </div>
+                        <p class="text-xs text-slate-500">{{ $audit->user?->name ?? 'System' }} · {{ $audit->created_at->format('Y-m-d H:i') }}</p>
+                    </div>
+                </div>
+            @empty
+                <p class="rounded-lg bg-slate-50 p-3 text-sm text-slate-500 dark:bg-slate-950">No settings changes recorded yet.</p>
+            @endforelse
+        </div>
+    </section>
 </x-layouts.app>

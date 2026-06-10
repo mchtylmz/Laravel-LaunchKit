@@ -40,6 +40,12 @@ class UserController extends Controller
         ]);
         $user->assignRole($data['role']);
         activity()->causedBy($request->user())->performedOn($user)->log('Kullanıcı oluşturuldu.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Kullanıcı oluşturuldu',
+            'message' => "{$user->name} için yeni kullanıcı hesabı oluşturuldu.",
+            'type' => 'success',
+            'url' => route('users.index'),
+        ]);
 
         return back()->with('status', 'Kullanıcı oluşturuldu.');
     }
@@ -54,6 +60,12 @@ class UserController extends Controller
 
         $user->syncRoles([$data['role']]);
         activity()->causedBy($request->user())->performedOn($user)->log('Kullanıcı rolü güncellendi.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Rol güncellendi',
+            'message' => "{$user->name} kullanıcısının rolü {$data['role']} olarak değiştirildi.",
+            'type' => 'info',
+            'url' => route('users.index'),
+        ]);
 
         return back()->with('status', 'Kullanıcı rolü güncellendi.');
     }

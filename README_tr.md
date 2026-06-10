@@ -21,9 +21,14 @@ Laravel projelerinin çoğunda benzer temel ihtiyaçlar bulunur: giriş/kayıt, 
 - Dark mode
 - Responsive sidebar
 - Notification dropdown
+- Kalıcı notification kayıtları ve okundu işaretleme
 - Activity log
+- Activity log arama ve filtreleme
 - Basit dosya yöneticisi
 - Dashboard istatistik kartları
+- Dashboard mini grafik kartları
+- İki aşamalı doğrulama
+- Ayarlar değişiklik geçmişi
 - Demo kullanıcı seedleri
 
 ## Kullanılan Teknolojiler

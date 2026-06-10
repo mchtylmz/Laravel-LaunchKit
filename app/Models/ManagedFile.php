@@ -16,14 +16,35 @@ class ManagedFile extends Model
 
     public function sizeForHumans(): string
     {
-        if ($this->size >= 1024 * 1024) {
-            return round($this->size / 1024 / 1024, 2).' MB';
+        return self::formatSize($this->size);
+    }
+
+    public function category(): string
+    {
+        $mimeType = $this->mime_type ?? '';
+
+        return match (true) {
+            str_starts_with($mimeType, 'image/') => 'image',
+            str_starts_with($mimeType, 'application/'), str_starts_with($mimeType, 'text/') => 'document',
+            default => 'other',
+        };
+    }
+
+    public function categoryLabel(): string
+    {
+        return ucfirst($this->category());
+    }
+
+    public static function formatSize(int $size): string
+    {
+        if ($size >= 1024 * 1024) {
+            return round($size / 1024 / 1024, 2).' MB';
         }
 
-        if ($this->size >= 1024) {
-            return round($this->size / 1024, 2).' KB';
+        if ($size >= 1024) {
+            return round($size / 1024, 2).' KB';
         }
 
-        return $this->size.' B';
+        return $size.' B';
     }
 }

@@ -33,6 +33,12 @@ class RoleController extends Controller
         $role = Role::query()->create(['name' => $data['name']]);
         $role->syncPermissions($data['permissions'] ?? []);
         activity()->causedBy($request->user())->performedOn($role)->log('Rol oluşturuldu.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Rol oluşturuldu',
+            'message' => "{$role->name} rolü oluşturuldu.",
+            'type' => 'success',
+            'url' => route('roles.index'),
+        ]);
 
         return back()->with('status', 'Rol oluşturuldu.');
     }
@@ -48,6 +54,12 @@ class RoleController extends Controller
 
         $role->syncPermissions($data['permissions'] ?? []);
         activity()->causedBy($request->user())->performedOn($role)->log('Rol izinleri güncellendi.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Rol izinleri güncellendi',
+            'message' => "{$role->name} rolünün izinleri güncellendi.",
+            'type' => 'info',
+            'url' => route('roles.index'),
+        ]);
 
         return back()->with('status', 'Rol izinleri güncellendi.');
     }

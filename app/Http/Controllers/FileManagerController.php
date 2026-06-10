@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManagedFile;
+use App\Models\User;
+use App\Support\LaunchKitSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,12 +13,61 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileManagerController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         abort_unless(auth()->user()?->can('manage files'), 403);
 
+        $filters = $request->validate([
+            'q' => ['nullable', 'string', 'max:120'],
+            'uploader_id' => ['nullable', 'integer', 'exists:users,id'],
+            'type' => ['nullable', 'in:image,document,other'],
+        ]);
+
+        $query = ManagedFile::query()
+            ->with('user')
+            ->when($filters['q'] ?? null, fn ($query, $search) => $query->where('original_name', 'like', "%{$search}%"))
+            ->when($filters['uploader_id'] ?? null, fn ($query, $uploaderId) => $query->where('user_id', $uploaderId))
+            ->when($filters['type'] ?? null, function ($query, $type): void {
+                if ($type === 'image') {
+                    $query->where('mime_type', 'like', 'image/%');
+
+                    return;
+                }
+
+                if ($type === 'document') {
+                    $query->where(function ($documentQuery): void {
+                        $documentQuery
+                            ->where('mime_type', 'like', 'application/%')
+                            ->orWhere('mime_type', 'like', 'text/%');
+                    });
+
+                    return;
+                }
+
+                $query->where(function ($otherQuery): void {
+                    $otherQuery
+                        ->whereNull('mime_type')
+                        ->orWhere(function ($knownTypeQuery): void {
+                            $knownTypeQuery
+                                ->where('mime_type', 'not like', 'image/%')
+                                ->where('mime_type', 'not like', 'application/%')
+                                ->where('mime_type', 'not like', 'text/%');
+                        });
+                });
+            });
+
         return view('file-manager.index', [
-            'files' => ManagedFile::query()->with('user')->latest()->paginate(12),
+            'files' => $query->latest()->paginate(12)->withQueryString(),
+            'filters' => $filters,
+            'uploaders' => User::query()
+                ->whereIn('id', ManagedFile::query()->select('user_id')->distinct())
+                ->orderBy('name')
+                ->get(['id', 'name']),
+            'stats' => [
+                'total_files' => ManagedFile::query()->count(),
+                'total_size' => ManagedFile::query()->sum('size'),
+            ],
+            'maxUploadSize' => max(1, LaunchKitSettings::integer('max_upload_size', 10240)),
         ]);
     }
 
@@ -24,8 +75,10 @@ class FileManagerController extends Controller
     {
         abort_unless(auth()->user()?->can('manage files'), 403);
 
+        $maxUploadSize = max(1, LaunchKitSettings::integer('max_upload_size', 10240));
+
         $data = $request->validate([
-            'file' => ['required', 'file', 'max:10240'],
+            'file' => ['required', 'file', 'max:'.$maxUploadSize],
         ]);
 
         $uploaded = $data['file'];
@@ -42,6 +95,12 @@ class FileManagerController extends Controller
         ]);
 
         activity()->causedBy($request->user())->performedOn($file)->log('Dosya yüklendi.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Dosya yüklendi',
+            'message' => "{$file->original_name} dosyası yüklendi.",
+            'type' => 'success',
+            'url' => route('file-manager.index'),
+        ]);
 
         return back()->with('status', 'Dosya yüklendi.');
     }
@@ -58,8 +117,15 @@ class FileManagerController extends Controller
         abort_unless(auth()->user()?->can('manage files'), 403);
 
         Storage::disk($managedFile->disk)->delete($managedFile->path);
+        $fileName = $managedFile->original_name;
         $managedFile->delete();
         activity()->causedBy($request->user())->log('Dosya silindi.');
+        $request->user()->appNotifications()->create([
+            'title' => 'Dosya silindi',
+            'message' => "{$fileName} dosyası silindi.",
+            'type' => 'warning',
+            'url' => route('file-manager.index'),
+        ]);
 
         return back()->with('status', 'Dosya silindi.');
     }

@@ -21,9 +21,14 @@ Most Laravel projects need the same foundation: authentication, profile manageme
 - Dark mode with local preference
 - Responsive sidebar
 - Notification dropdown
+- Persistent notification records with mark-as-read
 - Activity log
+- Activity log search and filters
 - Simple file manager
 - Dashboard statistics cards
+- Dashboard mini chart cards
+- Two-factor authentication
+- Settings audit history
 - Demo user seeders
 
 ## Tech Stack
