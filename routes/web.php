@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FileManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -63,6 +64,7 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/export/users', [ExportController::class, 'users'])->name('export.users');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
 
@@ -73,6 +75,7 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
 
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/export/activity-logs', [ExportController::class, 'activityLogs'])->name('export.activity-logs');
 
     Route::get('/file-manager', [FileManagerController::class, 'index'])->name('file-manager.index');
     Route::post('/file-manager', [FileManagerController::class, 'store'])->name('file-manager.store');

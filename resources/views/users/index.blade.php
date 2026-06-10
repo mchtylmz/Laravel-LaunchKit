@@ -13,6 +13,10 @@
         </form>
     </section>
 
+    <section class="mt-6 flex justify-end">
+        <a class="btn-secondary" href="{{ route('export.users') }}">CSV Export</a>
+    </section>
+
     <section class="card mt-6 overflow-x-auto">
         <table class="w-full min-w-[720px] text-left text-sm">
             <thead class="text-xs uppercase tracking-wide text-slate-400"><tr><th class="py-2">Name</th><th>Email</th><th>Role</th><th>Created</th><th>Action</th></tr></thead>

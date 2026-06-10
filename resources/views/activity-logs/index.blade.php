@@ -3,6 +3,9 @@
         <p class="section-title">Audit trail</p>
         <h2 class="mt-1 text-2xl font-black">Activity logs</h2>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Track important starter kit actions and user operations.</p>
+        <div class="mt-4 flex justify-end">
+            <a class="btn-secondary" href="{{ route('export.activity-logs') }}">CSV Export</a>
+        </div>
         <form method="GET" action="{{ route('activity-logs.index') }}" class="mt-5 grid gap-3 lg:grid-cols-5">
             <input name="q" placeholder="Search activity" value="{{ $filters['q'] ?? '' }}">
             <select name="causer_id">
