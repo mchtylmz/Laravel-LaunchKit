@@ -28,23 +28,24 @@
                 <div class="mt-6 px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Workspace</div>
                 <nav class="mt-3 space-y-1">
                     <a class="nav-link {{ request()->routeIs('dashboard') ? 'nav-link-active' : '' }}" href="{{ route('dashboard') }}"><span>Dashboard</span><span class="text-xs opacity-60">01</span></a>
-                    <a class="nav-link {{ request()->routeIs('notifications.*') ? 'nav-link-active' : '' }}" href="{{ route('notifications.index') }}"><span>Notifications</span><span class="text-xs opacity-60">08</span></a>
-                    <a class="nav-link {{ request()->routeIs('profile.*') ? 'nav-link-active' : '' }}" href="{{ route('profile.edit') }}"><span>Profile</span><span class="text-xs opacity-60">02</span></a>
-                    <a class="nav-link {{ request()->routeIs('sessions.*') ? 'nav-link-active' : '' }}" href="{{ route('sessions.index') }}"><span>Sessions</span><span class="text-xs opacity-60">03</span></a>
+                    <a class="nav-link {{ request()->routeIs('search') ? 'nav-link-active' : '' }}" href="{{ route('search', ['q' => '']) }}"><span>Search</span><span class="text-xs opacity-60">02</span></a>
+                    <a class="nav-link {{ request()->routeIs('notifications.*') ? 'nav-link-active' : '' }}" href="{{ route('notifications.index') }}"><span>Notifications</span><span class="text-xs opacity-60">09</span></a>
+                    <a class="nav-link {{ request()->routeIs('profile.*') ? 'nav-link-active' : '' }}" href="{{ route('profile.edit') }}"><span>Profile</span><span class="text-xs opacity-60">03</span></a>
+                    <a class="nav-link {{ request()->routeIs('sessions.*') ? 'nav-link-active' : '' }}" href="{{ route('sessions.index') }}"><span>Sessions</span><span class="text-xs opacity-60">04</span></a>
                     @can('manage settings')
-                        <a class="nav-link {{ request()->routeIs('settings.*') ? 'nav-link-active' : '' }}" href="{{ route('settings.edit') }}"><span>Settings</span><span class="text-xs opacity-60">04</span></a>
+                        <a class="nav-link {{ request()->routeIs('settings.*') ? 'nav-link-active' : '' }}" href="{{ route('settings.edit') }}"><span>Settings</span><span class="text-xs opacity-60">05</span></a>
                     @endcan
                     @can('manage users')
-                        <a class="nav-link {{ request()->routeIs('users.*') ? 'nav-link-active' : '' }}" href="{{ route('users.index') }}"><span>Users</span><span class="text-xs opacity-60">05</span></a>
+                        <a class="nav-link {{ request()->routeIs('users.*') ? 'nav-link-active' : '' }}" href="{{ route('users.index') }}"><span>Users</span><span class="text-xs opacity-60">06</span></a>
                     @endcan
                     @can('manage roles')
-                        <a class="nav-link {{ request()->routeIs('roles.*') ? 'nav-link-active' : '' }}" href="{{ route('roles.index') }}"><span>Roles</span><span class="text-xs opacity-60">06</span></a>
+                        <a class="nav-link {{ request()->routeIs('roles.*') ? 'nav-link-active' : '' }}" href="{{ route('roles.index') }}"><span>Roles</span><span class="text-xs opacity-60">07</span></a>
                     @endcan
                     @can('view activity logs')
-                        <a class="nav-link {{ request()->routeIs('activity-logs.*') ? 'nav-link-active' : '' }}" href="{{ route('activity-logs.index') }}"><span>Activity logs</span><span class="text-xs opacity-60">07</span></a>
+                        <a class="nav-link {{ request()->routeIs('activity-logs.*') ? 'nav-link-active' : '' }}" href="{{ route('activity-logs.index') }}"><span>Activity logs</span><span class="text-xs opacity-60">08</span></a>
                     @endcan
                     @can('manage files')
-                        <a class="nav-link {{ request()->routeIs('file-manager.*') ? 'nav-link-active' : '' }}" href="{{ route('file-manager.index') }}"><span>File manager</span><span class="text-xs opacity-60">08</span></a>
+                        <a class="nav-link {{ request()->routeIs('file-manager.*') ? 'nav-link-active' : '' }}" href="{{ route('file-manager.index') }}"><span>File manager</span><span class="text-xs opacity-60">10</span></a>
                     @endcan
                 </nav>
 
@@ -71,6 +72,9 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-3">
+                            <form method="GET" action="{{ route('search') }}" class="hidden sm:block">
+                                <input class="w-48" name="q" value="{{ request('q') }}" placeholder="Search..." x-on:keydown.enter="$el.form.submit()">
+                            </form>
                             <div x-data="{ open: false }" class="relative">
                                 <button class="btn-secondary relative px-3" x-on:click="open = ! open">
                                     Notifications
