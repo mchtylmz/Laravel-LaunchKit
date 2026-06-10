@@ -64,9 +64,11 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/export/users', [ExportController::class, 'users'])->name('export.users');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
+    Route::get('/users/import', [UserController::class, 'showImport'])->name('users.import');
+    Route::post('/users/import', [UserController::class, 'import'])->name('users.import.store');
+    Route::get('/export/users', [ExportController::class, 'users'])->name('export.users');
 
     Route::get('/search', SearchController::class)->name('search');
 

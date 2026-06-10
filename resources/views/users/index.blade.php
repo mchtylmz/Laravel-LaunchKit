@@ -13,7 +13,8 @@
         </form>
     </section>
 
-    <section class="mt-6 flex justify-end">
+    <section class="mt-6 flex justify-end gap-3">
+        <a class="btn-secondary" href="{{ route('users.import') }}">CSV Import</a>
         <a class="btn-secondary" href="{{ route('export.users') }}">CSV Export</a>
     </section>
 
