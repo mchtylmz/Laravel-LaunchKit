@@ -12,9 +12,12 @@
                 @csrf
                 <input class="w-full" name="email" type="email" placeholder="Email" value="{{ old('email', 'admin@example.com') }}" required>
                 <input class="w-full" name="password" type="password" placeholder="Password" required>
-                <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                    <input class="rounded" name="remember" type="checkbox" value="1"> Remember me
-                </label>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                        <input class="rounded" name="remember" type="checkbox" value="1"> Remember me
+                    </label>
+                    <a class="text-sm font-semibold text-indigo-600" href="{{ route('password.forgot') }}">Forgot password?</a>
+                </div>
                 <button class="btn-primary w-full" type="submit">Login</button>
             </form>
             <div class="mt-5 rounded-lg bg-slate-50 p-3 text-xs text-slate-500 dark:bg-slate-950">

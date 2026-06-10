@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password as PasswordFacade;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
@@ -136,6 +137,53 @@ class AuthController extends Controller
         $this->sendTwoFactorCode($user);
 
         return back()->with('status', 'Yeni doğrulama kodu gönderildi.');
+    }
+
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot');
+    }
+
+    public function sendResetLink(Request $request): RedirectResponse
+    {
+        $data = $request->validate(['email' => ['required', 'email', 'exists:users,email']]);
+
+        $token = PasswordFacade::broker()->createToken(User::query()->where('email', $data['email'])->first());
+
+        Mail::raw("Şifre sıfırlama linkiniz: ".route('password.reset', $token), function ($message) use ($data): void {
+            $message->to($data['email'])->subject('Laravel LaunchKit – Şifre Sıfırlama');
+        });
+
+        return back()->with('status', 'Şifre sıfırlama linki e-posta adresinize gönderildi.');
+    }
+
+    public function showResetForm(string $token): View|RedirectResponse
+    {
+        return view('auth.reset', compact('token'));
+    }
+
+    public function resetPassword(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'email' => ['required', 'email', 'exists:users,email'],
+            'token' => ['required', 'string'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        $broker = PasswordFacade::broker();
+
+        $user = User::query()->where('email', $data['email'])->first();
+
+        if (! $broker->tokenExists($user, $data['token'])) {
+            return back()->withErrors(['email' => 'Geçersiz veya süresi dolmuş şifre sıfırlama bağlantısı.']);
+        }
+
+        $user->update(['password' => Hash::make($data['password'])]);
+        $broker->deleteToken($user);
+
+        activity()->causedBy($user)->log('Şifre sıfırlandı.');
+
+        return redirect()->route('login')->with('status', 'Şifreniz başarıyla sıfırlandı. Yeni şifrenizle giriş yapabilirsiniz.');
     }
 
     public function logout(Request $request): RedirectResponse

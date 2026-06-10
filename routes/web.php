@@ -24,6 +24,13 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register.store');
 });
 
+Route::middleware('guest')->group(function (): void {
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.forgot');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+});
+
 Route::get('/two-factor-challenge', [AuthController::class, 'showTwoFactor'])->name('two-factor.challenge');
 Route::post('/two-factor-challenge', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor-resend', [AuthController::class, 'resendTwoFactor'])->name('two-factor.resend');
