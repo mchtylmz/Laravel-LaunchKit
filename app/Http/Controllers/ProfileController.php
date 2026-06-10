@@ -8,13 +8,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Activitylog\Models\Activity;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     public function edit(): View
     {
-        return view('profile.edit');
+        $activities = Activity::query()
+            ->where(function ($q) {
+                $q->where('causer_type', auth()->user()?->getMorphClass())
+                  ->where('causer_id', auth()->id());
+            })
+            ->orWhere(function ($q) {
+                $q->where('subject_type', auth()->user()?->getMorphClass())
+                  ->where('subject_id', auth()->id());
+            })
+            ->latest()
+            ->take(20)
+            ->get();
+
+        return view('profile.edit', ['activities' => $activities]);
     }
 
     public function update(Request $request): RedirectResponse

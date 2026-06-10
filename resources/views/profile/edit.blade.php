@@ -69,4 +69,31 @@
             <button class="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-50 dark:border-red-800 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950" type="submit">Delete account</button>
         </form>
     </section>
+
+    <section class="card mt-6">
+        <h3 class="text-lg font-bold">Activity timeline</h3>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Recent actions performed on your account.</p>
+        <div class="mt-5 space-y-0">
+            @forelse ($activities as $activity)
+                <div class="flex items-start gap-3 border-b border-slate-100 py-3 last:border-0 dark:border-slate-800">
+                    <div class="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs dark:bg-slate-800">
+                        @switch($activity->description)
+                            @case('Profil güncellendi') @case('Kullanıcı oluşturuldu') ✏️ @break
+                            @case('Şifre değiştirildi') 🔑 @break
+                            @case('İki aşamalı doğrulama açıldı') 🔒 @break
+                            @case('İki aşamalı doğrulama kapatıldı') 🔓 @break
+                            @case('Hesap silindi') 🗑️ @break
+                            @default 📋
+                        @endswitch
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-slate-800 dark:text-white">{{ $activity->description }}</p>
+                        <p class="text-xs text-slate-400">{{ $activity->created_at->diffForHumans() }}</p>
+                    </div>
+                </div>
+            @empty
+                <p class="py-6 text-center text-sm text-slate-400">No activity yet.</p>
+            @endforelse
+        </div>
+    </section>
 </x-layouts.app>

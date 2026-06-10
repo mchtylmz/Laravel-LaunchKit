@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
+    Route::post('/users/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulk-delete');
+    Route::post('/users/bulk-role', [UserController::class, 'bulkRole'])->name('users.bulk-role');
     Route::get('/users/import', [UserController::class, 'showImport'])->name('users.import');
     Route::post('/users/import', [UserController::class, 'import'])->name('users.import.store');
     Route::get('/export/users', [ExportController::class, 'users'])->name('export.users');

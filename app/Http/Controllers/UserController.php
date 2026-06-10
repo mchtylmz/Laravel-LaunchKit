@@ -71,6 +71,57 @@ class UserController extends Controller
         return back()->with('status', 'Kullanıcı rolü güncellendi.');
     }
 
+    public function bulkDelete(Request $request): RedirectResponse
+    {
+        abort_unless(auth()->user()?->can('manage users'), 403);
+
+        $data = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['exists:users,id'],
+        ]);
+
+        $count = User::query()->whereIn('id', $data['user_ids'])->delete();
+
+        activity()->causedBy($request->user())->log("Toplu silme: {$count} kullanıcı silindi.");
+        $request->user()->appNotifications()->create([
+            'title' => 'Kullanıcılar silindi',
+            'message' => "{$count} kullanıcı toplu olarak silindi.",
+            'type' => 'warning',
+            'url' => route('users.index'),
+        ]);
+
+        return back()->with('status', "{$count} kullanıcı silindi.");
+    }
+
+    public function bulkRole(Request $request): RedirectResponse
+    {
+        abort_unless(auth()->user()?->can('manage users'), 403);
+
+        $data = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['exists:users,id'],
+            'role' => ['required', 'exists:roles,name'],
+        ]);
+
+        $users = User::query()->whereIn('id', $data['user_ids'])->get();
+        $count = 0;
+
+        foreach ($users as $user) {
+            $user->syncRoles([$data['role']]);
+            $count++;
+        }
+
+        activity()->causedBy($request->user())->log("Toplu rol güncelleme: {$count} kullanıcının rolü {$data['role']} yapıldı.");
+        $request->user()->appNotifications()->create([
+            'title' => 'Roller güncellendi',
+            'message' => "{$count} kullanıcının rolü {$data['role']} olarak değiştirildi.",
+            'type' => 'info',
+            'url' => route('users.index'),
+        ]);
+
+        return back()->with('status', "{$count} kullanıcının rolü güncellendi.");
+    }
+
     public function showImport(): View
     {
         abort_unless(auth()->user()?->can('manage users'), 403);
