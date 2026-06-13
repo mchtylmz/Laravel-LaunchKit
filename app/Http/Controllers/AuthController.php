@@ -80,10 +80,11 @@ class AuthController extends Controller
         ]);
 
         $user->assignRole('user');
+        $user->sendEmailVerificationNotification();
         Auth::login($user);
         activity()->causedBy($user)->performedOn($user)->log('Yeni kullanıcı kayıt oldu.');
 
-        return redirect()->route('dashboard');
+        return redirect()->route('verification.notice');
     }
 
     public function showTwoFactor(): View|RedirectResponse
