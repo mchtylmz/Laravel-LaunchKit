@@ -19,7 +19,11 @@ class DemoUserSeeder extends Seeder
         foreach ($users as $demo) {
             $user = User::query()->updateOrCreate(
                 ['email' => $demo['email']],
-                ['name' => $demo['name'], 'password' => Hash::make('password')]
+                [
+                    'name' => $demo['name'],
+                    'password' => Hash::make('password'),
+                    'email_verified_at' => now(),
+                ]
             );
 
             $user->syncRoles([$demo['role']]);

@@ -26,7 +26,7 @@ class LaunchKitActionsTest extends TestCase
             'email' => 'member@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
-        ])->assertRedirect('/dashboard');
+        ])->assertRedirect('/email/verify');
 
         $this->assertAuthenticated();
         $this->assertTrue(User::query()->where('email', 'member@example.com')->firstOrFail()->hasRole('user'));
